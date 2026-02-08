@@ -1,0 +1,73 @@
+{# 検索条件ボックス（共通部品） #}
+{# 期待する変数: fields, input_cols, actions, allow_export #}
+
+{% load dict_extras %}
+
+{% with sc=input_cols %}
+<div class="row row-cols-{{ sc.default|default:2 }} row-cols-md-{{ sc.md|default:sc.default|default:2 }} row-cols-lg-{{ sc.lg|default:sc.md|default:sc.default|default:2 }}
+            border border-dark border-1 rounded bg-light mx-3 p-3
+            {% if actions.placement == 'inside' %}position-relative{% endif %}">
+
+    {# 各入力フィールド #}
+    {% for f in fields %}
+    <div class="col mb-2">
+        <label class="form-label">{{ f.label }}</label>
+
+        {% if f.type == "text" %}
+        <input type="text" name="{{ f.name }}" value="{{ request.GET|get_item:f.name }}"
+            class="form-control form-control-sm">
+
+        {% elif f.type == "date" %}
+        <input type="date" name="{{ f.name }}" value="{{ request.GET|get_item:f.name }}"
+            class="form-control form-control-sm">
+
+        {% elif f.type == "file" %}
+        <input type="file" name="{{ f.name }}" class="form-control form-control-sm"
+            accept="{{ f.accept|default:'.csv,text/csv' }}">
+
+        {% elif f.type == "select" %}
+        <select name="{{ f.name }}" class="form-select form-select-sm">
+            {% for opt in f.choices %}
+            <option value="{{ opt.0 }}" {% if opt.0 == request.GET|get_item:f.name %}selected{% endif %}>{{ opt.1 }}</option>
+            {% endfor %}
+        </select>
+
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+{# アクションボタン #}
+{% if actions.placement == "inside" %}
+<div class="position-absolute end-0 bottom-0 pe-3 pb-3 d-flex gap-2">
+    {% if "search" in actions.buttons %}
+        <button type="submit" class="btn btn-primary">検索</button>
+    {% endif %}
+    {% if "register" in actions.buttons %}
+        <button type="submit" class="btn btn-primary">登録</button>
+    {% endif %}
+    {% if "reset" in actions.buttons %}
+        <button type="reset" class="btn btn-outline-secondary">クリア</button>
+    {% endif %}
+    {% if allow_export and "export" in actions.buttons %}
+        <button name="export" value="1" class="btn btn-outline-dark">エクスポート</button>
+    {% endif %}
+</div>
+{% else %}
+<div class="col-12 d-flex justify-content-{{ actions.justify|default:'end' }} gap-2 mt-2">
+    {% if "search" in actions.buttons %}
+        <button type="submit" class="btn btn-primary">検索</button>
+    {% endif %}
+    {% if "register" in actions.buttons %}
+        <button type="submit" class="btn btn-primary">登録</button>
+    {% endif %}
+    {% if "reset" in actions.buttons %}
+        <button type="reset" class="btn btn-outline-secondary">クリア</button>
+    {% endif %}
+    {% if allow_export and "export" in actions.buttons %}
+        <button name="export" value="1" class="btn btn-outline-dark">エクスポート</button>
+    {% endif %}
+</div>
+{% endif %}
+
+{% endwith %}

@@ -1,0 +1,26 @@
+{% extends "common/base.html" %}
+{% load static dict_extras %}
+
+{% block title %}{{page_title|default:'入力・結果画面'}}{% endblock %}
+
+{% block body_title %}{{page_title|default:'入力・結果画面'}}{% endblock %}
+{% block content %}
+{% if main_menu_url == "on" %}
+<div class="m-3">
+    <a href="{% url 'common:main_menu' %}">メインメニューに戻る</a>
+</div>
+{% endif %}
+
+<form method="{{ form_method|default:'get' }}" action="{{ form_action }}" 
+    enctype="{{ form_enctype|default:'application/x-www-form-urlencoded' }}"
+    class="mb-0">
+    {% csrf_token %}
+    <p class="h6 mx-3">{{ input_title|default:"入力項目" }}</p>
+    {% include "common/input_form.html" %}
+</form>
+
+{% if columns and columns|length > 0 %}
+<p class="h6 mx-3 mt-3">{{ table_title|default:"処理結果" }}</p>
+{% include "common/table.html" %}
+{% endif %}
+{% endblock %}

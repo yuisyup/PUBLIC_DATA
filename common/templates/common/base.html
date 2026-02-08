@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}My App{% endblock %}</title>
+
+    {% include "includes/bootstrap.html" %}
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <div class="container">
+        <p class="h1 bg-primary text-light m-3 p-3">{% block body_title %}My App{% endblock %}</p>
+
+        {% if messages or form.errors %}
+            <div class="px-3">
+                <!--Djangoメッセージ-->
+                {% for message in messages %}
+                    <li class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-{{ message.tags }}{% endif %}"
+                        style="list-style-type: none;">{{ message }}</li>
+                {% endfor %}
+
+                <!--Validationエラー-->
+                {% for error in form.non_field_errors %}
+                    <li class="alert alert-danger" style="list-style-type: none;">{{ error }}</li>
+                {% endfor %}
+
+                <!--Validationエラー（フィールドごと）-->
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li class="alert alert-danger" style="list-style-type: none;">{{ field.label }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

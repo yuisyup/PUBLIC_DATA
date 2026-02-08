@@ -1,0 +1,52 @@
+{# 検索結果テーブル（共通部品） #}
+{% load dict_extras %}
+{# 期待する変数: columns, rows, top_groups #}
+<div class="row mx-3">
+    <div class="col table-responsive px-0">
+        <table class="table table-sm table-light table-striped table-bordered text-nowrap mb-0">
+            {% if top_groups and top_groups|length > 0 %}
+            <thead class="table-light">
+                <tr>
+                    {% for g in top_groups %}
+                    <th scope="col" colspan="{{ g.span }}">{{ g.label }}</th>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    {% for col in columns %}
+                    <th scope="col">{{ col.label }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            {% else %}
+            <thead class="table-light">
+                <tr>
+                    {% for col in columns %}
+                    <th scope="col">{{ col.label }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            {% endif %}
+
+            <tbody>
+                {% if rows and rows|length > 0 %}
+                {% for r in rows %}
+                <tr>
+                    {% for col in columns %}
+                    {% if col.template %}
+                    {# 例外セルは個別テンプレに逃がせる #}
+                    {% include col.template with row=r col=col %}
+                    {% else %}
+                    <td>{{ r|get_item:col.key|default_if_none:"" }}</td>
+                    {% endif %}
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="{{ columns|length }}" class="text-center text-muted">データがありません</td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>

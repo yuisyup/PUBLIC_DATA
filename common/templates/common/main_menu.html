@@ -1,0 +1,19 @@
+<!-- home.html -->
+{% extends "common/base.html" %}
+
+{% block title %}メインメニュー{% endblock %}
+
+{% block body_title %}メインメニュー{% endblock %}
+{% block content %}
+    <div class="row border m-3 p-3">
+        <div class="col">
+            <p class="h4 bg-secondary text-light">データ登録</p>
+            <div class="url_area">
+                <a href="{% url 'common:register_csv' %}">CSV読み込み</a>
+            </div>
+        </div>
+        <div class="col">
+            <p class="h4 bg-secondary text-light">照会/分析</p>
+        </div>
+    </div>
+{% endblock %}

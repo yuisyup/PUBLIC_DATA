@@ -1,0 +1,44 @@
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ===== Django =====
+*.log
+local_settings.py
+db.sqlite3
+media/
+
+# ===== Virtual Environment =====
+venv/
+.venv/
+env/
+
+# ===== IDE / Editor =====
+.vscode/
+.idea/
+*.iml
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
+
+# ===== Test / Coverage =====
+.coverage
+htmlcov/
+
+# ===== Celery / Cache =====
+celerybeat-schedule
+celerybeat.pid
+
+# ===== Generated Artifacts =====
+artifacts/
+reports/
+output/
+*.csv
+*.parquet
+*.json
+
+# ===== Temporary =====
+tmp/
+.cache/
