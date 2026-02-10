@@ -4,7 +4,7 @@ import traceback
 
 from common.issue.models import Issue
 from common.exceptions.register_errors import CsvParseError
-from common.services.domain.dto import InputDefSpec, FkResolveSpec
+from common.services.domain.register.dto import InputDefSpec, FkResolveSpec
 from common.services.domain.register.dataframe.edit.mapping_column import MappingColumn
 from common.services.domain.register.dataframe.edit.replace import Replace
 from common.services.infra.input.csv_reader import CsvReader

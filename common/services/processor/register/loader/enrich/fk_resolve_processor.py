@@ -10,7 +10,7 @@ from common.exceptions.register_errors import (
     )
 from common.issue.models import Issue
 
-from common.services.domain.dto import FkResolveSpec
+from common.services.domain.register.dto import FkResolveSpec
 from common.services.domain.register.dataframe.resolve_fk.check_def import CheckDef
 from common.services.domain.register.dataframe.resolve_fk.build import Build
 from common.services.infra.model_registry import ModelRegistry, ModelRegistryError

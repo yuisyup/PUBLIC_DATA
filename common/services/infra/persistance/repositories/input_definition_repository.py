@@ -3,7 +3,7 @@ from django.db.models.query import QuerySet
 
 from common.exceptions.app_error import FailedCreateInputDefChoicesError
 from common.models import MsInputDef, MsInputColumnDef
-from common.services.domain.dto import FkResolveSpecInput, InputDefRaw
+from common.services.domain.register.dto import FkResolveSpecInput, InputDefRaw
 
 class InputDefinitionRepository:
     

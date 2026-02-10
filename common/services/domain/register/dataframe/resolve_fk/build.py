@@ -5,7 +5,7 @@ from typing import *
 from common.exceptions.register_errors import FkResolveFailedCreateLookupKwargsError
 
 if TYPE_CHECKING:
-    from common.services.domain.dto import FkResolveSpec
+    from common.services.domain.register.dto import FkResolveSpec
 
 
 class Build:

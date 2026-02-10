@@ -17,7 +17,7 @@ from common.issue.models import Issue
 from common.issue.run_result_dto import RunResult
 from common.services.domain.run.run_result_factory import RunResultFactory
 from common.services.infra.persistance.run.run_result_persister import RunResultPersister
-from common.services.domain.register.register_usecase_factory import RegisterUsecaseFactory
+from common.services.processor.register.factory.register_usecase_factory import RegisterUsecaseFactory
 from common.services.usecase.register.register_usecase_protocol import RegisterUsecaseProtocol
 from common.views.helpers.issue_table_builder import IssueTableBuilder
 from common.views.register.register_view_mixin import RegisterViewMixin

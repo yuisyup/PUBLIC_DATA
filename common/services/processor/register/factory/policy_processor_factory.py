@@ -4,7 +4,7 @@ import traceback
 from common.exceptions.register_errors import RegisterPolicyNotFoundError
 
 from common.utils.import_utils import ImportUtils
-from common.services.processor.register.registerpolicy.register_processor_protocol import RegisterProcessorProtocol
+from common.services.processor.register.loader.policy_execute.register_processor_protocol import RegisterProcessorProtocol
 from common.services.infra.persistance.django_model_persister import ModelPersister
 
 class PolicyProcessorFactory:

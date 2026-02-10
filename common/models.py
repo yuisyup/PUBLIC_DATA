@@ -111,7 +111,7 @@ class MsInputColumnDef(models.Model):
         verbose_name_plural = 'データ入力定義カラムマスタ'
         unique_together = ('input_id', 'column_order')
 
-class MsInputPreprocessDef(models.Model):
+class MsInputNormilizerStepDef(models.Model):
     """
     入力定義ごとの前処理定義（子テーブル）
     - 1行 = 1つの前処理
@@ -119,7 +119,7 @@ class MsInputPreprocessDef(models.Model):
     """
     input_id = models.ForeignKey(MsInputDef, on_delete=models.CASCADE, db_column='input_id')
     seq = models.PositiveIntegerField(default=1)
-    preprocess_key = models.CharField(max_length=100)
+    normalizer_step_key = models.CharField(max_length=100)
 
     is_enabled = models.BooleanField(default=True)
 
@@ -130,7 +130,7 @@ class MsInputPreprocessDef(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = "ms_input_preprocess_def"
+        db_table = "ms_input_normilizer_step_def"
         indexes = [
             models.Index(fields=["input_id", "seq"]),
         ]
@@ -141,7 +141,7 @@ class MsInputPreprocessDef(models.Model):
         verbose_name_plural = 'データ入力定義前処理マスタ'
 
     def __str__(self) -> str:
-        return f"{self.input_id}:{self.seq}:{self.preprocess_key}"
+        return f"{self.input_id}:{self.seq}:{self.normalizer_step_key}"
     
 '''
 ーーーーーーーーーーーーーーーーーーーーーーー
@@ -292,6 +292,7 @@ class TestNameList(models.Model):
     name = models.CharField(max_length=40, null=True, blank=True)
     born_in = models.DateField(null=True, blank=True)
     country = models.ForeignKey(MsCountry, on_delete=models.CASCADE, db_column='country_code')
+    execute_date = models.DateField(null=True, blank=True)
     
     class Meta:
         db_table = "test_name_list"

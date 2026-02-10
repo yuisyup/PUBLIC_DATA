@@ -1,9 +1,9 @@
 import pandas as pd
 from typing import List
-from common.services.domain.register.preprocess.preprocessor_protocol import PreprocessorProtocol
+from common.services.processor.register.normalizer.steps.normalizer_steps_protocol import NormalizerStepsProtocol
 
-class PreprocessPipeline:
-    def __init__(self, processors: List[PreprocessorProtocol]):
+class NormalizerPipeline:
+    def __init__(self, processors: List[NormalizerStepsProtocol]):
         self._processors = processors
 
     def apply(self, df: pd.DataFrame) -> pd.DataFrame:

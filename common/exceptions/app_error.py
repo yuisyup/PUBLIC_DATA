@@ -142,7 +142,7 @@ class FailedCreateInputDefChoicesError(AppError):
     """
     ...
     
-class PreprocessRegistryError(Exception):
+class NormalizerRegistryError(Exception):
     """
     前処理実行クラス生成に失敗した場合の例外<br>
     
@@ -152,7 +152,7 @@ class PreprocessRegistryError(Exception):
     """
     ...
     
-class PreprocessDefinitionError(Exception):
+class NormalizerDefinitionError(Exception):
     """
     前処理定義の解決に失敗した場合の例外
     ⚠CAUTION:

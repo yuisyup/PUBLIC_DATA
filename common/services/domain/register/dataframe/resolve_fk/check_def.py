@@ -1,7 +1,7 @@
 from typing import *
 
 from common.exceptions.register_errors import FkResolveDefIncompleteError, FkResolveLookupFieldsMismatchError
-from common.services.domain.dto import FkResolveSpec
+from common.services.domain.register.dto import FkResolveSpec
 
 class CheckDef:
     

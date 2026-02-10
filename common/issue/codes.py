@@ -17,7 +17,7 @@ IssuePhase = Literal[
     "REGISTER.GET_USECASE",
     "REGISTER.CSV_PARSE",
     "REGISTER.EDIT_DATAFRAME_COLUMN_NAME",
-    "REGISTER.PREPROCESS",
+    "REGISTER.NORMALIZE",
     "REGISTER.FK_RESOLVE",
     "REGISTER.GET_POLICY",
     "REGISTER.GET_TARGET_MODEL_CLASS",
@@ -33,7 +33,7 @@ IssueCode = Literal[
 
     # ===== 登録 =====
     "REGISTER.SUCCESS",                                    # 成功
-    "REGISTER.PREPROCESS_KEY_NOT_FOUND",                   # 前処理キー不正
+    "REGISTER.NORMALIZE_KEY_NOT_FOUND",                    # 前処理キー不正
     "REGISTER.FAILED_CREATE_FK_LOOKUP_KWARGS",             # FK変換先Model検索条件の生成に失敗（カラム数不一致など）
     "REGISTER.MODEL_CLASS_NOT_FOUND",                      # FK変換先Modelのクラスオブジェクトの解決に失敗
     "REGISTER.MODEL_DATA_NOT_FOUND",                       # FK変換先Modelのデータ取得に失敗

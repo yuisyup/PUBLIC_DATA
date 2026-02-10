@@ -2,21 +2,21 @@ import traceback
 import pandas as pd
 from typing import *
 from django.db import models, DatabaseError
-from django.core.exceptions import ValidationError
 
 from common.exceptions.register_errors import CsvParseError
 from common.issue.models import Issue
-from common.services.usecase.register.register_usecase_protocol import RegisterUsecaseProtocol
-from common.services.processor.register.dataframe.create.csv_to_dataframe_processor import CsvToDataframeProcessor
-from common.services.processor.register.dataframe.fk_resolve.fk_resolve_processor import FkResolveProcessor
-from common.services.processor.register.registerpolicy.register_processor_protocol import RegisterProcessorProtocol
-from common.services.domain.register.registerpolicy.policy_processor_factory import PolicyProcessorFactory, RegisterPolicyNotFoundError
-from common.services.domain.register.preprocess.preprocess_pipeline_factory import PreprocessPipelineFactory
 from common.services.usecase.register.abstract_register_usecase import AbstractRegisterUsecase
+from common.services.usecase.register.register_usecase_protocol import RegisterUsecaseProtocol
+from common.services.processor.register.extractor.csv_to_dataframe_processor import CsvToDataframeProcessor
+from common.services.processor.register.loader.enrich.fk_resolve_processor import FkResolveProcessor
+from common.services.processor.register.loader.policy_execute.register_processor_protocol import RegisterProcessorProtocol
+from common.services.processor.register.normalizer.normalizer_pipeline import NormalizerPipeline
+from common.services.processor.register.factory.policy_processor_factory import PolicyProcessorFactory, RegisterPolicyNotFoundError
+from common.services.processor.register.factory.normalizer_pipeline_factory import NormalizerPipelineFactory
+from common.services.processor.register.factory.normilizer_step_registry import NormalizerStepRegistry
 from common.services.infra.persistance.django_model_persister import DjangoModelPersister
 from common.services.infra.model_registry import ModelRegistry, ModelRegistryError
-from common.services.infra.persistance.repositories.input_preprocess_definition_repository import InputPreprocessDefinitionRepository
-from common.services.infra.preprocess_registry import PreprocessRegistry
+from common.services.infra.persistance.repositories.input_normalizer_step_definition_repository import InputNormalizerStepDefinitionRepository
 
 
 class RegisterFromCsvUsecase(RegisterUsecaseProtocol, AbstractRegisterUsecase):
@@ -48,18 +48,19 @@ class RegisterFromCsvUsecase(RegisterUsecaseProtocol, AbstractRegisterUsecase):
         
         # ★ 1.5 前処理
         try:
-            pipeline = PreprocessPipelineFactory(
-                repo=InputPreprocessDefinitionRepository(),
-                registry=PreprocessRegistry(),
-            ).build(
-                input_id=self._def_spec.input_id,
-                issues=issues)
+            pipeline: NormalizerPipeline = NormalizerPipelineFactory(
+                repo=InputNormalizerStepDefinitionRepository(),
+                step_registry=NormalizerStepRegistry(),
+                ).build(
+                    input_id=self._def_spec.input_id,
+                    issues=issues
+                )
 
             df_preprocessed = pipeline.apply(df=df_mapped)
 
         except Exception as e:
             issues.append(Issue.error(
-                phase="REGISTER.PREPROCESS",
+                phase="REGISTER.NORMALIZE",
                 code="REGISTER.UNEXPECTED_ERROR",
                 message="前処理中に予期しないエラーが発生しました。",
                 context={

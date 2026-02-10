@@ -7,12 +7,12 @@ from typing import *
 import pandas as pd
 
 from common.issue.models import Issue
-from common.services.processor.register.registerpolicy.register_processor_protocol import RegisterProcessorProtocol
 from common.exceptions.register_errors import FailedCreateDuplicationLookupKwargsError
 from common.services.domain.register.registerpolicy.lookup import Lookup
+from common.services.processor.register.loader.policy_execute.register_processor_protocol import RegisterProcessorProtocol
 from common.services.infra.persistance.django_model_persister import ModelPersister
 
-class UpsertRegisterProcessor(RegisterProcessorProtocol):
+class InsertOnlyRegisterProcessor(RegisterProcessorProtocol):
     
     def __init__(
         self, 
@@ -23,7 +23,6 @@ class UpsertRegisterProcessor(RegisterProcessorProtocol):
         :param persister: ModelPersister（永続化用クラス→Usecaseで指定）
         """
         self._persister = persister
-
 
     @override
     @transaction.atomic
@@ -54,44 +53,45 @@ class UpsertRegisterProcessor(RegisterProcessorProtocol):
             except FailedCreateDuplicationLookupKwargsError as e:
                 issues.append(e.to_issue(row_index=i + 1))
                 continue
-                
-            # 重複レコードを検索
+            
             try:
-                obj: models.Model | None = self._persister.lookup_first(model_class, **lookup)
+                exist_duplicate_record: bool = self._persister.exists_by_lookup(model_class, lookup)
             except DatabaseError as e:
                 raise e
-            
-            dupulication_flg: bool = False
-
-            # 重複レコード存在の場合　→　UPDATE
-            if obj:
-                for k, v in data.items():
-                    if k not in lookup_fields:
-                        setattr(obj, k, v)
-                        
-                dupulication_flg = True
-                            
-            # 重複レコード存在しない場合　→　INSERT
-            else:
-                obj = model_class(**data)
+                
+            # InsertOnlyルール（すでにレコード存在すれば拒否）
+            if exist_duplicate_record:
+                issue = Issue.warn(
+                    phase="REGISTER.POST_PROCESS",
+                    code="REGISTER.DUPLICATION",
+                    row_index= i + 1,
+                    message="重複レコードがあります。",
+                    context={
+                        **data,
+                        **lookup
+                    }
+                )
+                issues.append(issue)
+                continue
 
             try:
                 # 登録処理実行（I/O）
                 self._persister.create(model_class, data)
+                
             except ValidationError as e:
                 issue = Issue.error(
                     phase="REGISTER.POST_PROCESS",
                     code="REGISTER.FAILED_REGISTER_BY_VALIDATION",
+                    row_index= i + 1,
                     message="full_clean()によるバリデーションエラーで登録に失敗しました。",
                     context={
-                        **{"row_index": i + 1},
                         **data
                         **{
                             "error_message": str(e),
                             "trace": traceback.format_exc().splitlines()[-5:],
                         }
                     },
-                    skip_scope="ROW",
+                    skip_scope="ROW"
                 )
                 issues.append(issue)
                 continue
@@ -99,23 +99,10 @@ class UpsertRegisterProcessor(RegisterProcessorProtocol):
                 raise e
             
         # 処理成功時
-        if dupulication_flg:
-            message = "重複ありのため更新しました。"
-            context={
-                **{"row_index": i + 1},
-                **lookup_fields,
-            }
-        else: 
-            message="新規登録しました。"
-            context={
-                **{"row_index": i + 1},
-            }
-            
         issue = Issue.success(
             domain="REGISTER",
             phase="REGISTER.POST_PROCESS",
-            message=message,
-            context=context,
+            message="登録処理が正常終了しました。",
         )
         issues.append(issue)
 

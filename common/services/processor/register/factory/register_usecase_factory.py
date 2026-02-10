@@ -3,7 +3,7 @@ from typing import *
 from common.exceptions.register_errors import DefinitionNotFoundError, ColumnDefinitionNotFoundError, RegisterUsecaseClassNotFoundError
 from common.services.usecase.register.register_usecase_protocol import RegisterUsecaseProtocol
 from common.services.usecase.register.abstract_register_usecase import AbstractRegisterUsecase
-from common.services.domain.dto import InputDefRaw, InputDefSpec, FkResolveSpecInput, FkResolveSpec
+from common.services.domain.register.dto import InputDefRaw, InputDefSpec, FkResolveSpecInput, FkResolveSpec
 from common.services.infra.persistance.repositories.input_definition_repository import InputDefinitionRepository
 from common.utils.import_utils import ImportUtils
 

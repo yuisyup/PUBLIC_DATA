@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import *
 
-from common.services.domain.dto import InputDefSpec, FkResolveSpec
+from common.services.domain.register.dto import InputDefSpec, FkResolveSpec
 
 class AbstractRegisterUsecase(ABC):
     

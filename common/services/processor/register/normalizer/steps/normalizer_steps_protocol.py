@@ -1,6 +1,6 @@
 from typing import Protocol
 import pandas as pd
 
-class PreprocessorProtocol(Protocol):
+class NormalizerStepsProtocol(Protocol):
     def process(self, df: pd.DataFrame) -> pd.DataFrame:
         ...

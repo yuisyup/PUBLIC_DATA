@@ -1,8 +1,8 @@
 import pandas as pd
 from datetime import date
-from common.services.domain.register.preprocess.preprocessor_protocol import PreprocessorProtocol
+from common.services.processor.register.normalizer.steps.normalizer_steps_protocol import NormalizerStepsProtocol
 
-class AddExecuteDatePreprocessor(PreprocessorProtocol):
+class AddExecuteDate(NormalizerStepsProtocol):
     def __init__(self, column_name: str = "execute_date", value: str | None = None):
         self.column_name = column_name
         self.value = value or date.today().isoformat()
