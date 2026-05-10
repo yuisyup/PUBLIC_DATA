@@ -1,7 +1,11 @@
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
+
+import { fetchInputDefinitions } from "../../api/InputDefApi";
+import type { InputDefinition } from "../../types/InputDef";
 
 // zodによるvalidation定義
 const schema = z.object({
@@ -18,15 +22,6 @@ const schema = z.object({
 // zodのvalidationで定義したフィールドをform要素とする
 type CsvUploadFormValues = z.infer<typeof schema>;
 
-// テスト用モックデータ
-const mockInputDefs = [
-    {
-        id: 1,
-        inputSourceKey: "test_member_csv",
-        displayName: "テスト用名簿CSV",
-    },
-];
-
 // react-hook-formによるFORM定義
 export function CsvUploadForm() {
     const {
@@ -38,6 +33,27 @@ export function CsvUploadForm() {
         // zodのvalidationをFORMに適用
         resolver: zodResolver(schema),
     });
+
+    // state：入力データ定義（ID, 名前）リスト
+    const [inputDefinitions, setInputDefinitions] = useState<InputDefinition[]>([]);
+    // state：入力データ定義取得ローディング
+    const [loadingDefinitions, setLoadingDefinitions] = useState(true);
+
+    async function loadInputDefinitions() {
+        try {
+            const result = await fetchInputDefinitions("CSV");
+            setInputDefinitions(result);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoadingDefinitions(false);
+        }
+    }
+
+    // 画面表示時、入力データ定義一覧取得
+    useEffect(() => {
+        loadInputDefinitions();
+    }, []);
 
     // 登録ボタンアクション
     async function onSubmit(values: CsvUploadFormValues) {
@@ -63,10 +79,10 @@ export function CsvUploadForm() {
                                 <Form.Label>入力データ定義</Form.Label>
                                 <Form.Select
                                     {...register("inputDefinitionId")}
-                                    isInvalid={!!errors.inputDefinitionId}
+                                    disabled={loadingDefinitions}
                                 >
                                     <option value="">選択してください</option>
-                                    {mockInputDefs.map((def) => (
+                                    {inputDefinitions.map((def) => (
                                         <option key={def.id} value={String(def.id)}>
                                             {def.displayName}
                                         </option>
