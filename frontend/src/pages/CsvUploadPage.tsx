@@ -1,13 +1,12 @@
-import { CsvUploadForm } from "../components/form/CsvUploadForm";
+import { BulkRegisterForm } from "../features/bulkRegister/components/BulkRegisterForm";
 
-export function CsvUploadPage() {
-    return (
-        <div>
-            <div className="bg-primary text-white p-3 mb-4">
-                <h3 className="text-white">CSV読み込み</h3>
-            </div>
-
-            <CsvUploadForm />
-        </div>
-    );
+export function BulkRegisterPage() {
+  return (
+    <div>
+      <div className="bg-primary text-white p-3 mb-4">
+        <h3 className="text-white">データ一括登録</h3>
+      </div>
+      <BulkRegisterForm />
+    </div>
+  );
 }

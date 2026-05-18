@@ -1,7 +1,14 @@
 from dataclasses import dataclass
 from typing import *
 
-from common.issue.codes import DomainCode, IssueCode, IssuePhase, IssueSeverity, SkipScope
+from common.issue.codes import (
+    DomainCode,
+    IssueCode,
+    IssuePhase,
+    IssueSeverity,
+    SkipScope,
+)
+
 
 @dataclass(frozen=True)
 class Issue:
@@ -9,7 +16,7 @@ class Issue:
     実行中に発生した事象（成功/警告/エラー）を統一的に保持するDTO
 
     """
-    
+
     # 系コード
     domain: DomainCode
 

@@ -5,19 +5,20 @@ from django.db import models
 
 from common.issue.models import Issue
 
+
 class RegisterProcessorProtocol(Protocol):
 
     def execute(
-        self, 
-        df: pd.DataFrame, 
-        model_class: models.Model, 
+        self,
+        df: pd.DataFrame,
+        model_class: models.Model,
         issues: List[Issue],
-        lookup_fields,    
+        lookup_fields,
     ):
         """
         入力種別に応じてInputデータをDataframeに変換し、<br>
         INPUT定義マスタ内容に従ってDB登録を行う。
-        
+
         :param self: 説明
         :param df: FK変換済みDataframe
         :type df: pd.DataFrame
@@ -27,6 +28,6 @@ class RegisterProcessorProtocol(Protocol):
         :type issues: List[Issue]
         :param lookup_fields: 重複チェック検索条件
         :raises :raises: ValidationError, DatabaseError
-        
+
         """
         ...

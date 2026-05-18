@@ -1,0 +1,12 @@
+front_todo:
+    ☐ components/forms配下のinput共通を仕上げる。 @prio(2)
+    ☐ input共通を「ファイル一括登録共通」に適用する。 @prio(1)
+    ☐ 入力データ定義機能を専用featureに集約して整理する。
+    ☐ Issue機能を専用featureに集約して整理する。
+
+    ✔ ディレクトリの切り方をページ基準(pages, features)に変更し、原則化する。 @prio(1) @done(26-05-18 21:46)
+    ✔ axiosに渡すリクエストパス管理方法を明確化して落としこむ。 @prio(2) @done(26-05-18 21:46)
+    ✔ CSV用として切っていたapi等を「ファイル一括登録共通」とする。 @prio(3) @done(26-05-18 21:46)
+
+back_todo:
+    ☐ CSV用として切っていたview改めapiを「ファイル一括登録共通」とする。

@@ -16,11 +16,8 @@ class RegisterCsvForm(RegisterBaseForm):
     CSV登録系プロトタイプの共通フォーム基底
     - 機能固有の追加フィールドは継承して足す
     """
+
     # CSVファイル
     csv_file = forms.FileField(
-        label='CSVファイル', 
-        required=True,
-        error_messages={
-            'required': '必須です。'
-        }
+        label="CSVファイル", required=True, error_messages={"required": "必須です。"}
     )

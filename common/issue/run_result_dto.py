@@ -8,10 +8,10 @@ from uuid import uuid4
 from common.issue.models import Issue
 
 RunStatus = Literal[
-    "SUCCESS",          # エラー無しで完了
-    "SUCCESS_WITH_WARN",# WARNありだが完了
-    "FAILED",           # ERRORあり（かつ継続不能 or 仕様上失敗）
-    "ABORTED",          # 外部要因/致命的例外などで中断
+    "SUCCESS",  # エラー無しで完了
+    "SUCCESS_WITH_WARN",  # WARNありだが完了
+    "FAILED",  # ERRORあり（かつ継続不能 or 仕様上失敗）
+    "ABORTED",  # 外部要因/致命的例外などで中断
 ]
 
 RunMode = Literal[
@@ -25,11 +25,13 @@ RunSource = Literal[
     "API",
 ]
 
+
 @dataclass(frozen=True)
 class RunContext:
     """
     実行1回のメタ情報（どこから/何を/誰が）
     """
+
     run_id: str
     mode: RunMode
     source: RunSource
@@ -58,14 +60,15 @@ class RunCounts:
     """
     バッチ運用で「数字」を見たいので、集計枠を先に用意しておく
     """
-    total_rows: int = 0           # 入力行数
-    parsed_rows: int = 0          # 読めた行数（CSV→DF）
-    fk_resolved_rows: int = 0     # FK解決済みの行数（成功した行）
-    processed_rows: int = 0       # 登録処理対象に回した行数
-    inserted_rows: int = 0        # INSERT件数
-    updated_rows: int = 0         # UPDATE件数（upsert等）
-    skipped_rows: int = 0         # スキップした行数（重複/未解決/バリデ等）
-    error_rows: int = 0           # エラーのあった行数（ユニークrow_index数）
+
+    total_rows: int = 0  # 入力行数
+    parsed_rows: int = 0  # 読めた行数（CSV→DF）
+    fk_resolved_rows: int = 0  # FK解決済みの行数（成功した行）
+    processed_rows: int = 0  # 登録処理対象に回した行数
+    inserted_rows: int = 0  # INSERT件数
+    updated_rows: int = 0  # UPDATE件数（upsert等）
+    skipped_rows: int = 0  # スキップした行数（重複/未解決/バリデ等）
+    error_rows: int = 0  # エラーのあった行数（ユニークrow_index数）
 
     # issue集計
     info_count: int = 0
@@ -91,6 +94,7 @@ class RunResult:
     """
     実行1回の最終結果（ログ・制御・永続化の基準点）
     """
+
     context: RunContext
     timing: RunTiming
     status: RunStatus

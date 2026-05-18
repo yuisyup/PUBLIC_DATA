@@ -1,7 +1,6 @@
 from typing import *
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, JsonResponse
 
-from django.http import JsonResponse
 from common.services.infra.persistance.repositories.input_definition_repository import (
     InputDefinitionRepository,
 )

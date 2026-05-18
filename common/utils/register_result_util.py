@@ -1,5 +1,6 @@
 from typing import *
 
+
 class RegisterResultUtil:
 
     def merge_register_result(
@@ -7,7 +8,7 @@ class RegisterResultUtil:
         success: int,
         failure: int,
         insert_errors: List[Dict[str, Any]],
-        unresolved_logs: List[Dict[str, Any]]
+        unresolved_logs: List[Dict[str, Any]],
     ) -> Dict[str, Any]:
         """
         成功件数・失敗件数・エラーリスト（登録時）・未解決ログ（FK解決時）を統合したresult辞書を返す。
@@ -21,5 +22,5 @@ class RegisterResultUtil:
         return {
             "success": success,
             "failure": failure,
-            "errors": unresolved_logs + insert_errors
+            "errors": unresolved_logs + insert_errors,
         }

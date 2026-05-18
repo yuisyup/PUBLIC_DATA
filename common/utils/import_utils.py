@@ -1,11 +1,12 @@
 import importlib
 
-class ImportUtils():
-    
+
+class ImportUtils:
+
     @staticmethod
     def import_class(full_path: str):
         """"""
-        
+
         """
         引数のパスに対応するクラス型を返す。
         
@@ -13,8 +14,8 @@ class ImportUtils():
         :return klass: クラス型
         :raise ValueError: 該当クラスなし
         """
-        
-        module_path, class_name = full_path.rsplit('.', 1)
+
+        module_path, class_name = full_path.rsplit(".", 1)
         module = importlib.import_module(module_path)
         klass = getattr(module, class_name)
         return klass

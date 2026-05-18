@@ -17,21 +17,16 @@ class FormFactory:
     # 画面側で "feature_key" を固定で持つ
     _map: Dict[str, Type[forms.Form]] = {
         # ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼ 登録系 ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
-        
         # CSV登録画面
         "register_csv": RegisterCsvForm,
-        
         # ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲ 登録系 ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
     }
 
     @classmethod
-    def get_form_class(
-        cls,
-        feature_key: str
-    ) -> Type[forms.Form]:
+    def get_form_class(cls, feature_key: str) -> Type[forms.Form]:
         """
         feature_key から Formクラスを取得する
-        
+
         :param cls: クラスメソッド
         :param feature_key: 画面/機能キー
         :type feature_key: str
@@ -41,4 +36,6 @@ class FormFactory:
         try:
             return cls._map[feature_key]
         except KeyError as e:
-            raise FeatureKeyFormNotFoundError(f"Form定義が見つかりません feature_key={feature_key}") from e
+            raise FeatureKeyFormNotFoundError(
+                f"Form定義が見つかりません feature_key={feature_key}"
+            ) from e

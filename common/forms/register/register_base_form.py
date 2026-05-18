@@ -13,11 +13,8 @@ class RegisterBaseForm(forms.Form):
     登録系プロトタイプの共通フォーム基底
     - 機能固有の追加フィールドは継承して足す
     """
+
     # 入力データ定義選択肢
     input_data_choices = forms.ChoiceField(
-        label='入力データ定義', 
-        required=True,
-        error_messages={
-            'required': '必須です。'
-        }
+        label="入力データ定義", required=True, error_messages={"required": "必須です。"}
     )

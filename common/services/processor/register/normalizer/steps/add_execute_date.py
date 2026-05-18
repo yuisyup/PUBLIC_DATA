@@ -1,6 +1,9 @@
 import pandas as pd
 from datetime import date
-from common.services.processor.register.normalizer.steps.normalizer_steps_protocol import NormalizerStepsProtocol
+from common.services.processor.register.normalizer.steps.normalizer_steps_protocol import (
+    NormalizerStepsProtocol,
+)
+
 
 class AddExecuteDate(NormalizerStepsProtocol):
     def __init__(self, column_name: str = "execute_date", value: str | None = None):

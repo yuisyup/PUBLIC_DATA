@@ -18,15 +18,12 @@ class ModelRegistry:
     - "app_label.ModelName" 形式のラベルを受け取る想定。
     """
 
-    def resolve(
-        self,
-        model_label: str
-    ) -> Optional[Type[models.Model]]:
+    def resolve(self, model_label: str) -> Optional[Type[models.Model]]:
         """
         モデルラベルから Django Model クラスを解決する。<br>
         見つからない場合独自例外を返す。<br>
         ※contextへのModel情報格納は呼び出し元で行う。
-        
+
         :param model_label: apps.Model
         :type model_label: str
         :return: Modelクラス（解決失敗の場合None）
@@ -38,5 +35,5 @@ class ModelRegistry:
             model_class = apps.get_model(*model_label.split("."))
         except (LookupError, ValueError):
             raise ModelRegistryError()
-        
+
         return model_class

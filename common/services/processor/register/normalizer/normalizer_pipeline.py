@@ -1,6 +1,9 @@
 import pandas as pd
 from typing import List
-from common.services.processor.register.normalizer.steps.normalizer_steps_protocol import NormalizerStepsProtocol
+from common.services.processor.register.normalizer.steps.normalizer_steps_protocol import (
+    NormalizerStepsProtocol,
+)
+
 
 class NormalizerPipeline:
     def __init__(self, processors: List[NormalizerStepsProtocol]):

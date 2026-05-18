@@ -44,7 +44,9 @@ class IssueTableBuilder:
                 "skip_scope": i.skip_scope,
             }
             if include_context:
-                row["context"] = IssueTableBuilder._context_to_str(i.context, context_max_len)
+                row["context"] = IssueTableBuilder._context_to_str(
+                    i.context, context_max_len
+                )
             rows.append(row)
 
         # top_groups は使わないなら空でOK（table.html は無ければ通常theadになる）
