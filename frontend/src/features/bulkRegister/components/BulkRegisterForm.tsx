@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
+import { FileInput } from "../../../components/forms/FileInput";
 
 import { InputDefSelect } from "../../inputdef/components/InputDefSelect";
 import { InputTypeSelect } from "../../inputdef/components/InputTypeSelect";
@@ -39,7 +40,7 @@ export function BulkRegisterForm() {
     const file = values.file;
 
     if (!inputDefId || !file) {
-      setErrorMessage("ファイルを選択してください。");
+      setErrorMessage("入力データ定義かファイルが未入力です。");
       return;
     }
 
@@ -54,7 +55,7 @@ export function BulkRegisterForm() {
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
-      <h5 className="mb-3">入力項目</h5>
+      <h5 className="mb-3">ファイル一括登録</h5>
 
       <Card className="mb-3 border-dark">
         <Card.Body>
@@ -75,16 +76,13 @@ export function BulkRegisterForm() {
             </Col>
 
             <Col md={4}>
-              <Form.Group>
-                <Form.Label>ファイル</Form.Label>
-                <Form.Control
-                  type="file"
-                  {...register("file")}
-                  disabled={!selectedInputType}
-                  isInvalid={!!errors.file}
-                />
-                <Form.Control.Feedback type="invalid"></Form.Control.Feedback>
-              </Form.Group>
+              <FileInput<BulkRegisterFormValues>
+                name="file"
+                label="ファイル"
+                register={register}
+                error={errors.file}
+                disabled={!selectedInputType}
+              />
             </Col>
           </Row>
         </Card.Body>
@@ -100,7 +98,7 @@ export function BulkRegisterForm() {
           variant="outline-secondary"
           onClick={() => reset()}
         >
-          クリア
+          リセット
         </Button>
       </div>
 
