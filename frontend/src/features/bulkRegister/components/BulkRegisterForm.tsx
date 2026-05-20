@@ -4,82 +4,51 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
 
-import { fetchInputDefinitions } from "../hooks/inputDefApi";
-import type { InputDefinition } from "../types/InputDef";
+import { InputDefSelect } from "../../inputdef/components/InputDefSelect";
+import { InputTypeSelect } from "../../inputdef/components/InputTypeSelect";
+
 import { useBulkRegister } from "../hooks/bulkRegister";
 import { BulkRegisterResult } from "./BulkRegisterResult";
 import { schema } from "../schemas/bulkRegisterScema";
 
-/**
- * ファイル一括登録SCHEMA
- */
-type BulkReisterFormValues = z.infer<typeof schema>;
+type BulkRegisterFormValues = z.infer<typeof schema>;
 
-/**
- * hooks
- */
-const { submit, result: bulkRegisteResult } = useBulkRegister();
-
-/**
- *
- * @returns JSX.Element
- */
 export function BulkRegisterForm() {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<BulkReisterFormValues>({
-    // zodのvalidationをFORMに適用
-    resolver: zodResolver(schema),
-  });
-
-  // state：入力データ定義（ID, 名前）リスト
-  const [inputDefinitions, setInputDefinitions] = useState<InputDefinition[]>(
-    [],
-  );
-  // state：入力データ定義取得ローディング
-  const [loadingDefinitions, setLoadingDefinitions] = useState(true);
+  const { submit, result: bulkRegisterResult } = useBulkRegister();
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  async function loadInputDefinitions() {
-    try {
-      const inputDefs = await fetchInputDefinitions("CSV");
-      setInputDefinitions(inputDefs);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoadingDefinitions(false);
-    }
-  }
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<BulkRegisterFormValues>({
+    resolver: zodResolver(schema),
+  });
+  const selectedInputType = watch("inputType");
 
-  // 画面表示時、入力データ定義一覧取得
   useEffect(() => {
-    loadInputDefinitions();
-  }, []);
+    setValue("inputDefinitionId", "");
+  }, [selectedInputType, setValue]);
 
-  // 登録ボタンアクション
-  async function onSubmit(values: BulkReisterFormValues) {
+  async function onSubmit(values: BulkRegisterFormValues) {
     const inputDefId = values.inputDefinitionId;
-    const file = values.csvFile[0];
-
-    console.log({
-      inputDefinitionId: values.inputDefinitionId,
-      fileName: file.name,
-    });
+    const file = values.file;
 
     if (!inputDefId || !file) {
-      setErrorMessage("CSV種類とファイルを選択してください。");
+      setErrorMessage("ファイルを選択してください。");
       return;
     }
 
-    // 登録処理を実行
     try {
+      setErrorMessage(null);
       await submit(file, Number(inputDefId));
     } catch (error) {
-      setErrorMessage("登録処理でエラー");
+      console.error(error);
+      setErrorMessage("登録処理でエラーが発生しました。");
     }
   }
 
@@ -90,38 +59,31 @@ export function BulkRegisterForm() {
       <Card className="mb-3 border-dark">
         <Card.Body>
           <Row className="g-3">
-            <Col md={6}>
-              <Form.Group>
-                <Form.Label>入力データ定義</Form.Label>
-                <Form.Select
-                  {...register("inputDefinitionId")}
-                  disabled={loadingDefinitions}
-                >
-                  <option value="">選択してください</option>
-                  {inputDefinitions.map((def) => (
-                    <option key={def.id} value={String(def.id)}>
-                      {def.displayName}
-                    </option>
-                  ))}
-                </Form.Select>
-                <Form.Control.Feedback type="invalid">
-                  {errors.inputDefinitionId?.message}
-                </Form.Control.Feedback>
-              </Form.Group>
+            <Col md={4}>
+              <InputTypeSelect
+                registration={register("inputType")}
+                error={errors.inputType}
+              />
             </Col>
 
-            <Col md={6}>
+            <Col md={4}>
+              <InputDefSelect
+                inputType={selectedInputType}
+                registration={register("inputDefinitionId")}
+                error={errors.inputDefinitionId}
+              />
+            </Col>
+
+            <Col md={4}>
               <Form.Group>
-                <Form.Label>CSVファイル</Form.Label>
+                <Form.Label>ファイル</Form.Label>
                 <Form.Control
                   type="file"
-                  accept=".csv,text/csv"
-                  {...register("csvFile")}
-                  isInvalid={!!errors.csvFile}
+                  {...register("file")}
+                  disabled={!selectedInputType}
+                  isInvalid={!!errors.file}
                 />
-                <Form.Control.Feedback type="invalid">
-                  {errors.csvFile?.message}
-                </Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid"></Form.Control.Feedback>
               </Form.Group>
             </Col>
           </Row>
@@ -132,6 +94,7 @@ export function BulkRegisterForm() {
         <Button type="submit" variant="primary" disabled={isSubmitting}>
           登録
         </Button>
+
         <Button
           type="button"
           variant="outline-secondary"
@@ -140,13 +103,17 @@ export function BulkRegisterForm() {
           クリア
         </Button>
       </div>
+
       <div className="d-flex justify-content-center gap-2">
         {errorMessage && (
           <div className="alert alert-danger mt-3" role="alert">
             {errorMessage}
           </div>
         )}
-        {bulkRegisteResult && <BulkRegisterResult result={bulkRegisteResult} />}
+
+        {bulkRegisterResult && (
+          <BulkRegisterResult result={bulkRegisterResult} />
+        )}
       </div>
     </Form>
   );
