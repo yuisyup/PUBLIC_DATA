@@ -20,6 +20,11 @@ export async function uploadBulkRegisterFile(params: {
   const res = await apiClient.post<bulkRegisterResponse>(
     API_PATHS.bulkRegister.register,
     formData,
+    {
+      headers: {
+        "Content-Type": undefined,
+      },
+    },
   );
 
   return res.data;

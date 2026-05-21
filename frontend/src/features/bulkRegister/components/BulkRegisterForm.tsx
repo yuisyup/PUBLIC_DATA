@@ -37,7 +37,7 @@ export function BulkRegisterForm() {
 
   async function onSubmit(values: BulkRegisterFormValues) {
     const inputDefId = values.inputDefinitionId;
-    const file = values.file;
+    const file = values.file?.[0];
 
     if (!inputDefId || !file) {
       setErrorMessage("入力データ定義かファイルが未入力です。");
@@ -55,8 +55,6 @@ export function BulkRegisterForm() {
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
-      <h5 className="mb-3">ファイル一括登録</h5>
-
       <Card className="mb-3 border-dark">
         <Card.Body>
           <Row className="g-3">
