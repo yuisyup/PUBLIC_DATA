@@ -1,5 +1,6 @@
 import { http, HttpResponse } from "msw";
 import { API_PATHS } from "../lib/apiPaths";
+import { mockRegisterSuccess } from "./responses/register";
 
 const mockApiPath = (path: string) => `*${path}`;
 
@@ -59,50 +60,42 @@ export const handlers = [
     return HttpResponse.json({ results });
   }),
 
-  http.post(mockApiPath(API_PATHS.bulkRegister.register), async ({ request }) => {
-    const formData = await request.formData();
-    const inputDefId = formData.get("inputDefId");
-    const file = formData.get("file");
+  http.post(
+    mockApiPath(API_PATHS.bulkRegister.register),
+    async ({ request }) => {
+      const formData = await request.formData();
+      const inputDefId = formData.get("inputDefId");
+      const file = formData.get("file");
 
-    if (!inputDefId || !file || typeof file === "string") {
-      return HttpResponse.json(
-        {
-          success: false,
-          runId: "mock-run-invalid",
-          status: "FAILED",
-          summary: {
-            totalIssues: 1,
-            errorCount: 1,
-            warningCount: 0,
-            infoCount: 0,
-          },
-          issues: [
-            {
-              severity: "ERROR",
-              phase: "GET_REGISTER_USECASE",
-              code: "INVALID_REQUEST",
-              row: null,
-              message: "inputDefId or file is missing.",
-              skip: "ALL",
-              context: null,
+      if (!inputDefId || !file || typeof file === "string") {
+        return HttpResponse.json(
+          {
+            success: false,
+            runId: "mock-run-invalid",
+            status: "FAILED",
+            summary: {
+              totalIssues: 1,
+              errorCount: 1,
+              warningCount: 0,
+              infoCount: 0,
             },
-          ],
-        },
-        { status: 400 },
-      );
-    }
+            issues: [
+              {
+                severity: "ERROR",
+                phase: "GET_REGISTER_USECASE",
+                code: "INVALID_REQUEST",
+                row: null,
+                message: "inputDefId or file is missing.",
+                skip: "ALL",
+                context: null,
+              },
+            ],
+          },
+          { status: 400 },
+        );
+      }
 
-    return HttpResponse.json({
-      success: true,
-      runId: `mock-run-${Date.now()}`,
-      status: "SUCCESS",
-      summary: {
-        totalIssues: 0,
-        errorCount: 0,
-        warningCount: 0,
-        infoCount: 0,
-      },
-      issues: [],
-    });
-  }),
+      return HttpResponse.json(mockRegisterSuccess);
+    },
+  ),
 ];

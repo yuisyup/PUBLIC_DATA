@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Card, Col, Form, Row } from "react-bootstrap";
+import { Alert, Button, Card, Col, Form, Row } from "react-bootstrap";
 import { FileInput } from "../../../components/forms/FileInput";
 
 import { InputDefSelect } from "../../inputdef/components/InputDefSelect";
@@ -100,11 +100,11 @@ export function BulkRegisterForm() {
         </Button>
       </div>
 
-      <div className="d-flex justify-content-center gap-2">
+      <div className="mt-3">
         {errorMessage && (
-          <div className="alert alert-danger mt-3" role="alert">
+          <Alert variant="danger" className="mb-0">
             {errorMessage}
-          </div>
+          </Alert>
         )}
 
         {bulkRegisterResult && (
