@@ -24,7 +24,7 @@ from common.views.api.serializers.register_result_serializer import (
 )
 
 
-class RegisterCsvApiHandler(RegisterViewMixin):
+class BulkRegisterApiHandler(RegisterViewMixin):
 
     def handle(self, request: HttpRequest):
 

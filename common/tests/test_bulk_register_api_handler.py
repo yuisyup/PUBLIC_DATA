@@ -3,10 +3,12 @@ from types import SimpleNamespace
 import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-import common.services.api.register.register_csv_api_handler as handler_mod
+import common.services.api.register.bulk_register_api_handler as handler_mod
 from common.exceptions.register_errors import DefinitionNotFoundError
 from common.issue.models import Issue
-from common.services.api.register.register_csv_api_handler import RegisterCsvApiHandler
+from common.services.api.register.bulk_register_api_handler import (
+    BulkRegisterApiHandler,
+)
 from common.services.domain.run.run_result_factory import RunResultFactory
 
 
@@ -88,7 +90,7 @@ def test_handle_success_calls_factory_execute_run_result_and_persister(
 
     request = make_request(input_definition_id="input-1", csv_file=csv_file)
 
-    response = RegisterCsvApiHandler().handle(request)
+    response = BulkRegisterApiHandler().handle(request)
 
     assert response.status_code == 200
     assert response.body["success"] is True
@@ -121,7 +123,7 @@ def test_handle_when_register_usecase_factory_raises_register_error(monkeypatch)
 
     request = make_request(input_definition_id="missing-input")
 
-    response = RegisterCsvApiHandler().handle(request)
+    response = BulkRegisterApiHandler().handle(request)
 
     assert response.status_code == 500
     assert response.body["success"] is False
@@ -154,7 +156,7 @@ def test_handle_when_register_usecase_factory_returns_register_error_object(
 
     request = make_request(input_definition_id="bad-input")
 
-    response = RegisterCsvApiHandler().handle(request)
+    response = BulkRegisterApiHandler().handle(request)
 
     assert response.status_code == 500
     assert response.body["success"] is False
@@ -198,7 +200,7 @@ def test_handle_when_usecase_execute_returns_issue_list(
 
     request = make_request(input_definition_id="input-1")
 
-    response = RegisterCsvApiHandler().handle(request)
+    response = BulkRegisterApiHandler().handle(request)
 
     assert response.status_code == 500
     assert response.body["success"] is False
