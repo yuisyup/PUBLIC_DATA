@@ -2,6 +2,8 @@ from dataclasses import dataclass
 from typing import *
 from copy import deepcopy
 import traceback
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 from django.views import View
 from django.http import HttpRequest, JsonResponse
@@ -10,6 +12,7 @@ from common.services.api.register.register_csv_api_handler import RegisterCsvApi
 from common.services.api.register.api_response import ApiResponse
 
 
+@method_decorator(csrf_exempt, name="dispatch")
 class RegisterCsvApiView(View):
 
     def post(self, request: HttpRequest) -> JsonResponse:

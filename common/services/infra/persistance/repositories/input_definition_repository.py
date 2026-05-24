@@ -1,8 +1,11 @@
 from typing import *
 from django.db.models.query import QuerySet
 
-from common.exceptions.app_error import FailedCreateInputDefChoicesError
-from common.models import MsInputDef, MsInputColumnDef
+from common.exceptions.app_error import (
+    FailedCreateInputDefChoicesError,
+    FailedCreateInputTypeChoicesError,
+)
+from common.models import MsInputDef, MsInputColumnDef, MsInputType
 from common.services.domain.register.dto import FkResolveSpecInput, InputDefRaw
 
 
@@ -97,6 +100,26 @@ class InputDefinitionRepository:
         # id, 名前でのタプルリストを返却
         choices: List[tuple[int, str]] = [
             (str(ms.input_id), str(ms.input_name)) for ms in input_def_list
+        ]
+
+        return choices
+
+    def get_input_def_types_all(self) -> List[tuple[int, str]]:
+        """
+        入力データ種別を全件取得し、種別コードと種別名を返却する。
+
+        :return: 選択肢リスト（id, 名前）
+        :rtype: List[tuple[str, str]]
+        """
+
+        try:
+            input_type_list: QuerySet[MsInputType] = MsInputType.objects.all()
+        except Exception as e:
+            raise FailedCreateInputTypeChoicesError from e
+
+        # id, 名前でのタプルリストを返却
+        choices: List[tuple[str, str]] = [
+            (ms.input_type_code, ms.input_type_name) for ms in input_type_list
         ]
 
         return choices

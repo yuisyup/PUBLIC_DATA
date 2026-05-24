@@ -94,7 +94,7 @@ export const mockRegisterSuccess = {
       severity: "SUCCESS",
       phase: "REGISTER",
       code: "MOCK_SUCSESS",
-      row: "9",
+      row: "10",
       message: "Mock Worked",
       skip: "NONE",
       context: null,

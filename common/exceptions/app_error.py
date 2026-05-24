@@ -146,6 +146,19 @@ class FailedCreateInputDefChoicesError(AppError):
     ...
 
 
+class FailedCreateInputTypeChoicesError(AppError):
+    """
+    入力データ定義種別選択肢を生成できない場合の例外<br>
+    （画面からの呼び出しを想定）
+
+    ⚠CAUTION:
+        - 例外発生後の処理を呼出し元で実装すること
+        - Issueへの変換を行う場合、処理の文脈にphase, code等を合わせること
+    """
+
+    ...
+
+
 class NormalizerRegistryError(Exception):
     """
     前処理実行クラス生成に失敗した場合の例外<br>

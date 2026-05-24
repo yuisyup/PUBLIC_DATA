@@ -3,8 +3,8 @@ export const API_PATHS = {
     health: "/api/common/health/",
   },
   inputDef: {
-    inputTypes: "/api/input-types/",
-    inputDefs: "/api/input-definitions/",
+    inputTypes: "/api/common/input-types/",
+    inputDefs: "/api/common/input-definitions/",
   },
   bulkRegister: {
     register: "/api/common/bulk-register/",

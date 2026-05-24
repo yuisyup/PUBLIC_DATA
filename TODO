@@ -1,6 +1,6 @@
 front_todo:
-    ☐ Issue機能を専用featureに集約して整理する。
-    
+    ☐ Issue機能を専用featureに集約して整理する → Issue結果画面を作る。
+
     ✔ mock状態でファイル一括登録のget疎通確認する。 @done(26-05-22 22:16)
     ✔ ディレクトリの切り方をページ基準(pages, features)に変更し、原則化する。 @prio(1) @done(26-05-18 21:46)
     ✔ axiosに渡すリクエストパス管理方法を明確化して落としこむ。 @prio(2) @done(26-05-18 21:46)

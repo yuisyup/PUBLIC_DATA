@@ -29,9 +29,9 @@ class RegisterCsvApiHandler(RegisterViewMixin):
     def handle(self, request: HttpRequest):
 
         # 入力データ定義ID
-        input_def_id = request.POST.get("input_definition_id")
+        input_def_id = request.POST.get("inputDefId")
         # CSVファイル
-        csv_file = request.FILES.get("csv_file")
+        csv_file = request.FILES.get("file")
 
         # 登録処理実行（データ登録基幹モジュール）
         try:

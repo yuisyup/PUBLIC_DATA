@@ -7,6 +7,15 @@ from common.services.infra.persistance.repositories.input_definition_repository 
 
 
 def input_definition_choices(request: HttpRequest):
+    """
+    入力データ定義を種別を条件として取得する。
+
+    :param request: リクエストパラメータ（input_type: 入力データ種別）
+    :type request: HttpRequest
+    :return: 選択肢リスト（CODE, 名前）
+    :rtype: JsonResponse
+    """
+
     input_type = request.GET.get("input_type")
 
     if not input_type:
@@ -27,5 +36,33 @@ def input_definition_choices(request: HttpRequest):
         }
         for choice_id, choice_name in choices
     ]
+
+    print(data)
+
+    return JsonResponse({"results": data})
+
+
+def input_definition_types(request: HttpRequest):
+    """
+    入力データ種別を全件取得する。
+
+    :param request: リクエストパラメータ（input_type: 入力データ種別）
+    :type request: HttpRequest
+    :return: 選択肢リスト（CODE, 名前）
+    :rtype: JsonResponse
+    """
+
+    repository = InputDefinitionRepository()
+    choices: List[tuple[int, str]] = repository.get_input_def_types_all()
+
+    data = [
+        {
+            "code": type_code,
+            "displayName": type_name,
+        }
+        for type_code, type_name in choices
+    ]
+
+    print(data)
 
     return JsonResponse({"results": data})
