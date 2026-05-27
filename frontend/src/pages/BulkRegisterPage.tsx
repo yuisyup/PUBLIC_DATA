@@ -1,6 +1,10 @@
 import { Stack } from "react-bootstrap";
 import { BulkRegisterForm } from "../features/bulkRegister/components/BulkRegisterForm";
 
+/**
+ * データ一括登録画面ページ
+ * @returns
+ */
 export function BulkRegisterPage() {
   return (
     <Stack gap={4}>

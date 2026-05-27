@@ -1,6 +1,10 @@
 import { Col, Row } from "react-bootstrap";
 import { MenuSection } from "../components/menu/MenuSection";
 
+/**
+ * ホームページ（メニュー）
+ * @returns
+ */
 export function HomePage() {
   return (
     <Row className="border m-3 p-3">

@@ -8,6 +8,15 @@ type Props = {
   error?: FieldError;
 };
 
+/**
+ * 入力データ定義ID（定義名）選択プルダウン
+ *
+ * @param inputType: string（入力データ種別）
+ * @param registration: UseFormRegisterReturn（react-hook-form）
+ * @param error: FieldError（react-hook-form）
+ *
+ * @returns
+ */
 export function InputDefSelect({ inputType, registration, error }: Props) {
   const { inputDefinitions, isLoading } = useInputDefinitions(inputType);
 

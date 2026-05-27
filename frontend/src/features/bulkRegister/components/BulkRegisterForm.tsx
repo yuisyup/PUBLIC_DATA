@@ -14,6 +14,11 @@ import { schema } from "../schemas/bulkRegisterScema";
 
 type BulkRegisterFormValues = z.infer<typeof schema>;
 
+/**
+ * データ一括登録入力フォーム
+ *
+ * @returns
+ */
 export function BulkRegisterForm() {
   const { submit, result: bulkRegisterResult } = useBulkRegister();
 

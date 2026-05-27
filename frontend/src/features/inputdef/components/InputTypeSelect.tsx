@@ -7,6 +7,14 @@ type Props = {
   error?: FieldError;
 };
 
+/**
+ * 入力データ定義種別選択プルダウン
+ *
+ * @param registration: UseFormRegisterReturn（react-hook-form）
+ * @param error: FieldError（react-hook-form）
+ *
+ * @returns
+ */
 export function InputTypeSelect({ registration, error }: Props) {
   const { inputTypes, isLoading } = useInputTypes();
 

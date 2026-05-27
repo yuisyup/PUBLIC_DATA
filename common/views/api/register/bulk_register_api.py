@@ -1,17 +1,11 @@
-from dataclasses import dataclass
 from typing import *
-from copy import deepcopy
-import traceback
-from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-
-from django.views import View
 from django.http import HttpRequest, JsonResponse
 
 from common.services.api.register.bulk_register_api_handler import (
     BulkRegisterApiHandler,
 )
-from common.services.api.register.api_response import ApiResponse
+from common.services.api.api_response import ApiResponse
 
 
 @csrf_exempt

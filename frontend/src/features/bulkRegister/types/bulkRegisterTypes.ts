@@ -15,6 +15,9 @@ export type bulkRegisterStatus =
   | "FAILED"
   | string;
 
+/**
+ * 行レベル発生事象リスト
+ */
 export type IssueDto = {
   severity: IssueSeverity;
   phase: IssuePhase;
@@ -25,6 +28,9 @@ export type IssueDto = {
   context: Record<string, unknown> | null;
 };
 
+/**
+ * データ一括登録結果レスポンス
+ */
 export type bulkRegisterResponse = {
   success: boolean;
   runId: string;

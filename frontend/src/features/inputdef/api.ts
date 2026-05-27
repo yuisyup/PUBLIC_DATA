@@ -17,8 +17,6 @@ export async function fetchInputTypes(): Promise<InputType[]> {
     API_PATHS.inputDef.inputTypes,
   );
 
-  console.log(res);
-
   return res.data.results;
 }
 
@@ -39,7 +37,6 @@ export async function fetchInputDefinitions(
       },
     },
   );
-  console.log(res);
 
   return res.data.results;
 }

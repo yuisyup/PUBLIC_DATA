@@ -5,6 +5,12 @@ type Props = {
   result: bulkRegisterResponse;
 };
 
+/**
+ * データ一括登録結果サマリー表示
+ *
+ * @param result: bulkRegisterResponse
+ * @returns
+ */
 export function BulkRegisterResult({ result }: Props) {
   const { summary, issues } = result;
 

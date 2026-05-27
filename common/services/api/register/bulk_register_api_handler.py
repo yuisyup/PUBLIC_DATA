@@ -1,6 +1,6 @@
 from typing import *
 import traceback
-from django.http import HttpRequest, JsonResponse
+from django.http import HttpRequest
 
 from common.exceptions.register_errors import RegisterError
 from common.issue.models import Issue
@@ -15,8 +15,7 @@ from common.services.processor.register.factory.register_usecase_factory import 
 from common.services.usecase.register.register_usecase_protocol import (
     RegisterUsecaseProtocol,
 )
-from common.services.api.register.api_response import ApiResponse
-from common.views.helpers.issue_table_builder import IssueTableBuilder
+from common.services.api.api_response import ApiResponse
 from common.views.register.register_view_mixin import RegisterViewMixin
 
 from common.views.api.serializers.register_result_serializer import (
@@ -25,20 +24,31 @@ from common.views.api.serializers.register_result_serializer import (
 
 
 class BulkRegisterApiHandler(RegisterViewMixin):
+    """
+    データ一括登録apiハンドラクラス
+    """
 
     def handle(self, request: HttpRequest):
+        """
+        データ一括登録apiハンドラ。
+        データ一括登録Usecaseを使用して登録処理を行う。
+
+        :param request: HTTPリクエスト
+        :types request: HttpRequest
+        :return ApiResponse: APIレスポンス
+        """
 
         # 入力データ定義ID
         input_def_id = request.POST.get("inputDefId")
-        # CSVファイル
-        csv_file = request.FILES.get("file")
+        # ファイル
+        file = request.FILES.get("file")
 
         # 登録処理実行（データ登録基幹モジュール）
         try:
             result_issues: List[Issue] = self.run_register_usecase(
                 cleaned_data={
                     "input_def_id": input_def_id,
-                    "input_source": csv_file,
+                    "input_source": file,
                 }
             )
         except Exception as e:
@@ -60,12 +70,12 @@ class BulkRegisterApiHandler(RegisterViewMixin):
         run_result: RunResult = RunResultFactory.from_issues(
             issues=result_issues,
             mode="SCREEN",
-            source="CSV",
+            source="bulk_register",
             input_def_id=str(input_def_id),
             executed_by=getattr(request.user, "username", None),
             input_name=getattr(input_def_id, "name", None),
             tags={
-                "feature_key": "register_csv_api",
+                "feature_key": "register_api",
             },
         )
 
