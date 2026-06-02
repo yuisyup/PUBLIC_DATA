@@ -9,4 +9,7 @@ export const API_PATHS = {
   bulkRegister: {
     register: "/api/common/bulk-register/",
   },
+  runResultReference: {
+    search: "/api/common/run-result-reference/",
+  },
 } as const;

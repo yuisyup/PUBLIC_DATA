@@ -16,6 +16,9 @@ export function AppLayout() {
             <Nav.Link as={Link} to="/health">
               Health
             </Nav.Link>
+            <Nav.Link as={Link} to="/run-result-reference">
+              Run Results
+            </Nav.Link>
             <Nav.Link href="http://localhost:8000/admin/" target="_blank">
               Admin
             </Nav.Link>

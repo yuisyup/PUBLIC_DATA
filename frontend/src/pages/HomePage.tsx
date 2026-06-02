@@ -1,10 +1,6 @@
 import { Col, Row } from "react-bootstrap";
 import { MenuSection } from "../components/menu/MenuSection";
 
-/**
- * ホームページ（メニュー）
- * @returns
- */
 export function HomePage() {
   return (
     <Row className="border m-3 p-3">
@@ -21,7 +17,15 @@ export function HomePage() {
       </Col>
 
       <Col>
-        <MenuSection title="照会/分析" items={[]} />
+        <MenuSection
+          title="照会・分析"
+          items={[
+            {
+              label: "処理結果照会",
+              path: "/run-result-reference",
+            },
+          ]}
+        />
       </Col>
       <Col>
         <MenuSection title="管理" items={[]} />

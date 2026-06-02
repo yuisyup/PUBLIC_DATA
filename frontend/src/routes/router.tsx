@@ -3,6 +3,7 @@ import { AppLayout } from "../components/layout/AppLayout";
 import { HomePage } from "../pages/HomePage";
 import { BulkRegisterPage } from "../pages/BulkRegisterPage";
 import { HealthCheckPage } from "../pages/HealthCheckPage";
+import { RunResultReferencePage } from "../pages/RunResultReferencePage";
 
 export const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ export const router = createBrowserRouter([
       {
         path: "bulk-register",
         element: <BulkRegisterPage />,
+      },
+      {
+        path: "run-result-reference",
+        element: <RunResultReferencePage />,
       },
     ],
   },

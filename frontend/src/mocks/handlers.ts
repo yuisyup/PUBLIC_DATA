@@ -41,6 +41,30 @@ const inputDefinitions = [
   },
 ];
 
+const runResultReferences = [
+  {
+    runId: "11111111-1111-1111-1111-111111111111",
+    inputDefId: "1",
+    inputDefName: "Customer CSV",
+    targetModel: "Customer",
+    createdAt: "2026-06-01T10:00:00+09:00",
+  },
+  {
+    runId: "22222222-2222-2222-2222-222222222222",
+    inputDefId: "2",
+    inputDefName: "Order CSV",
+    targetModel: "Order",
+    createdAt: "2026-06-02T11:30:00+09:00",
+  },
+  {
+    runId: "33333333-3333-3333-3333-333333333333",
+    inputDefId: "3",
+    inputDefName: "Inventory Excel",
+    targetModel: "Inventory",
+    createdAt: "2026-06-02T13:00:00+09:00",
+  },
+];
+
 export const handlers = [
   http.get("/api/user", () => {
     return HttpResponse.json({ id: 1, name: "Taro Yamada" });
@@ -98,4 +122,36 @@ export const handlers = [
       return HttpResponse.json(mockRegisterSuccess);
     },
   ),
+
+  http.get(mockApiPath(API_PATHS.runResultReference.search), ({ request }) => {
+    const url = new URL(request.url);
+    const inputType = url.searchParams.get("input_type");
+    const inputDefId = url.searchParams.get("input_def_id");
+    const createdAt = url.searchParams.get("created_at");
+
+    const inputDefIdsByType = inputType
+      ? inputDefinitions
+          .filter((def) => def.inputType === inputType)
+          .map((def) => String(def.id))
+      : [];
+
+    const results = runResultReferences.filter((row) => {
+      if (inputType && !inputDefIdsByType.includes(String(row.inputDefId))) {
+        return false;
+      }
+      if (inputDefId && row.inputDefId !== inputDefId) {
+        return false;
+      }
+      if (createdAt && !row.createdAt.startsWith(createdAt)) {
+        return false;
+      }
+      return true;
+    });
+
+    return HttpResponse.json({
+      success: true,
+      results,
+      issues: [],
+    });
+  }),
 ];

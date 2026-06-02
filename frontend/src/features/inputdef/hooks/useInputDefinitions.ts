@@ -19,7 +19,6 @@ export function useInputDefinitions(inputType: string) {
 
   useEffect(() => {
     if (!inputType) {
-      setInputDefinitions([]);
       return;
     }
 
@@ -46,5 +45,5 @@ export function useInputDefinitions(inputType: string) {
     };
   }, [inputType]);
 
-  return { inputDefinitions, isLoading };
+  return { inputDefinitions: inputType ? inputDefinitions : [], isLoading };
 }

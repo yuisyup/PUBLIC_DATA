@@ -1,4 +1,4 @@
-export type IssueSeverity = "ERROR" | "WARNING" | "INFO";
+export type IssueSeverity = "ERROR" | "WARN" | "WARNING" | "INFO";
 
 export type IssuePhase =
   | "GET_REGISTER_USECASE"

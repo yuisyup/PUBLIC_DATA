@@ -8,7 +8,7 @@ import type {
   UseFormRegister,
 } from "react-hook-form";
 
-type FileInputError = FieldError | Merge<FieldError, FieldErrorsImpl<any>>;
+type FileInputError = FieldError | Merge<FieldError, FieldErrorsImpl<FieldValues>>;
 
 type Props<T extends FieldValues> = {
   name: Path<T>;

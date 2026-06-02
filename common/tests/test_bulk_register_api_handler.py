@@ -18,9 +18,9 @@ def make_request(*, input_definition_id="input-1", csv_file=None, username="test
     """
 
     return SimpleNamespace(
-        POST={"input_definition_id": input_definition_id},
+        POST={"inputDefId": input_definition_id},
         FILES={
-            "csv_file": csv_file
+            "file": csv_file
             or SimpleUploadedFile(
                 "data.csv", b"id,name\n1,Alice\n", content_type="text/csv"
             )
@@ -103,10 +103,10 @@ def test_handle_success_calls_factory_execute_run_result_and_persister(
     assert len(factory_calls) == 1
     assert factory_calls[0]["issues"] is issues
     assert factory_calls[0]["mode"] == "SCREEN"
-    assert factory_calls[0]["source"] == "CSV"
+    assert factory_calls[0]["source"] == "bulk_register"
     assert factory_calls[0]["input_def_id"] == "input-1"
     assert factory_calls[0]["executed_by"] == "tester"
-    assert factory_calls[0]["tags"] == {"feature_key": "register_csv_api"}
+    assert factory_calls[0]["tags"] == {"feature_key": "register_api"}
 
     assert FakePersister.saved_run_result is not None
     assert FakePersister.saved_run_result.status == "SUCCESS"

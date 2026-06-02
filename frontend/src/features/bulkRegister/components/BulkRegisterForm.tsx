@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert, Button, Card, Col, Form, Row } from "react-bootstrap";
@@ -27,14 +27,14 @@ export function BulkRegisterForm() {
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     setValue,
     reset,
     formState: { errors, isSubmitting },
   } = useForm<BulkRegisterFormValues>({
     resolver: zodResolver(schema),
   });
-  const selectedInputType = watch("inputType");
+  const selectedInputType = useWatch({ control, name: "inputType" });
 
   useEffect(() => {
     setValue("inputDefinitionId", "");
