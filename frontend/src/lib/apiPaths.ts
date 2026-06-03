@@ -11,5 +11,6 @@ export const API_PATHS = {
   },
   runResultReference: {
     search: "/api/common/run-result-reference/",
+    detail: "/api/common/run-result-reference/detail/",
   },
 } as const;

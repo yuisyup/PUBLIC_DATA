@@ -5,12 +5,22 @@ from uuid import uuid4
 import pytest
 from django.utils import timezone
 
-from common.models import MsInputDef, MsInputType, MsRegisterPolicy, RunResultRecord
+from common.models import (
+    IssueContextRecord,
+    IssueRecord,
+    MsInputDef,
+    MsInputType,
+    MsRegisterPolicy,
+    RunResultRecord,
+)
 from common.services.api.run_result_reference.run_result_reference_api_handler import (
     RunResultReferenceApiHandler,
+    RunResultReferenceDetailApiHandler,
 )
 from common.services.domain.run_result_reference.dto import (
+    IssueDetailRow,
     RunResultReferenceCriteria,
+    RunResultReferenceDetail,
     RunResultReferenceRow,
 )
 from common.services.infra.persistance.repositories.run_result_reference.run_result_reference_repository import (
@@ -87,6 +97,99 @@ def test_handle_non_get_returns_issue():
     )
 
 
+def test_detail_handle_success_calls_usecase():
+    run_id = str(uuid4())
+    created_at = timezone.make_aware(datetime(2026, 6, 2, 10, 0, 0))
+    detail = RunResultReferenceDetail(
+        run_id=run_id,
+        mode="SCREEN",
+        source="CSV",
+        input_def_id="1",
+        csv_def_id=None,
+        target_model="Customer",
+        executed_by="tester",
+        invoked_by=None,
+        input_name="data.csv",
+        input_fingerprint="fingerprint",
+        tags_json={"feature_key": "bulk_register"},
+        started_at=created_at,
+        finished_at=created_at,
+        duration_ms=10,
+        status="SUCCESS",
+        total_rows=1,
+        parsed_rows=1,
+        fk_resolved_rows=1,
+        processed_rows=1,
+        inserted_rows=1,
+        updated_rows=0,
+        skipped_rows=0,
+        error_rows=0,
+        info_count=1,
+        warn_count=0,
+        error_count=0,
+        summary_message="summary",
+        exception_type=None,
+        exception_message=None,
+        created_at=created_at,
+        issues=[
+            IssueDetailRow(
+                id=str(uuid4()),
+                run_id=run_id,
+                domain="REGISTER",
+                phase="REGISTER.EXECUTE",
+                severity="INFO",
+                code="REGISTER.SUCCESS",
+                row_index=None,
+                message="registered",
+                skip_scope="NONE",
+                created_at=created_at,
+                contexts=[],
+            )
+        ],
+    )
+    calls = []
+
+    class FakeUsecase:
+        def get_detail(self, target_run_id):
+            calls.append(target_run_id)
+            return detail
+
+    response = RunResultReferenceDetailApiHandler(usecase=FakeUsecase()).handle(
+        make_request(),
+        run_id=run_id,
+    )
+
+    assert response.status_code == 200
+    assert response.body["success"] is True
+    assert response.body["runResult"]["runId"] == run_id
+    assert response.body["runResult"]["mode"] == "SCREEN"
+    assert response.body["issues"][0]["code"] == "REGISTER.SUCCESS"
+    assert response.body["issuesForError"] == []
+    assert calls == [run_id]
+
+
+def test_detail_handle_not_found_returns_issue():
+    run_id = str(uuid4())
+
+    class FakeUsecase:
+        def get_detail(self, target_run_id):
+            return None
+
+    response = RunResultReferenceDetailApiHandler(usecase=FakeUsecase()).handle(
+        make_request(),
+        run_id=run_id,
+    )
+
+    assert response.status_code == 404
+    assert response.body["success"] is False
+    assert response.body["runResult"] is None
+    assert response.body["issues"] == []
+    assert response.body["issuesForError"][0]["code"] == (
+        "RUN_RESULT_REFERENCE_DETAIL.NOT_FOUND"
+    )
+    assert response.body["issuesForError"][0]["context"] == {"run_id": run_id}
+
+
 @pytest.mark.django_db
 def test_repository_search_filters_and_resolves_input_def_name():
     csv_type = MsInputType.objects.create(
@@ -147,6 +250,47 @@ def test_repository_search_filters_and_resolves_input_def_name():
     assert rows[0].run_id == str(matching.run_id)
     assert rows[0].input_def_name == "Customer CSV"
     assert rows[0].target_model == "Customer"
+
+
+@pytest.mark.django_db
+def test_repository_get_detail_returns_run_issues_and_contexts():
+    created_at = timezone.make_aware(datetime(2026, 6, 2, 10, 0, 0))
+    record = create_run_result_record(
+        input_def_id="1",
+        target_model="Customer",
+        created_at=created_at,
+    )
+    issue = IssueRecord.objects.create(
+        run=record,
+        domain="REGISTER",
+        phase="REGISTER.VALIDATE",
+        severity="ERROR",
+        code="REGISTER.INVALID",
+        row_index=2,
+        message="invalid row",
+        skip_scope="ROW",
+    )
+    context = IssueContextRecord.objects.create(
+        issue=issue,
+        key="column",
+        value_text="name",
+        value_json={"expected": "not blank"},
+    )
+
+    detail = RunResultReferenceRepository().get_detail(str(record.run_id))
+
+    assert detail is not None
+    assert detail.run_id == str(record.run_id)
+    assert detail.mode == "SCREEN"
+    assert detail.source == "CSV"
+    assert detail.input_def_id == "1"
+    assert detail.target_model == "Customer"
+    assert len(detail.issues) == 1
+    assert detail.issues[0].id == str(issue.id)
+    assert detail.issues[0].code == "REGISTER.INVALID"
+    assert len(detail.issues[0].contexts) == 1
+    assert detail.issues[0].contexts[0].id == str(context.id)
+    assert detail.issues[0].contexts[0].value_json == {"expected": "not blank"}
 
 
 def create_run_result_record(

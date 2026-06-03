@@ -26,6 +26,10 @@ export const router = createBrowserRouter([
         path: "run-result-reference",
         element: <RunResultReferencePage />,
       },
+      {
+        path: "run-result-reference/detail/:runId",
+        element: <RunResultReferencePage />,
+      },
     ],
   },
 ]);

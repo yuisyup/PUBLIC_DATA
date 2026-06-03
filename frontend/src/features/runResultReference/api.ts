@@ -1,6 +1,7 @@
 import { apiClient } from "../../lib/axios";
 import { API_PATHS } from "../../lib/apiPaths";
 import type {
+  RunResultReferenceDetailResponse,
   RunResultReferenceResponse,
   RunResultReferenceSearchParams,
 } from "./types/runResultReferenceTypes";
@@ -17,6 +18,16 @@ export async function searchRunResults(
         created_at: params.createdAt || undefined,
       },
     },
+  );
+
+  return res.data;
+}
+
+export async function fetchRunResultDetail(
+  runId: string,
+): Promise<RunResultReferenceDetailResponse> {
+  const res = await apiClient.get<RunResultReferenceDetailResponse>(
+    `${API_PATHS.runResultReference.detail}${runId}/`,
   );
 
   return res.data;

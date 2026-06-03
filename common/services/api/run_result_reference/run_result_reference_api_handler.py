@@ -11,6 +11,7 @@ from common.services.usecase.run_result_reference.run_result_reference_usecase i
 )
 from common.views.api.serializers.issue_serializer import to_issue_dto
 from common.views.api.serializers.run_result_reference_serializer import (
+    to_run_result_reference_detail,
     to_run_result_reference_row,
 )
 
@@ -70,6 +71,50 @@ class RunResultReferenceApiHandler:
                 "success": False,
                 "results": [],
                 "issues": [to_issue_dto(issue) for issue in issues],
+            },
+            status_code=status_code,
+        )
+
+
+class RunResultReferenceDetailApiHandler:
+    def __init__(self, usecase: RunResultReferenceUsecase = None):
+        self.usecase = usecase or RunResultReferenceUsecase()
+
+    def handle(self, request: HttpRequest, *, run_id: str) -> ApiResponse:
+        if request.method != "GET":
+            issue = Issue.error(
+                phase="RUN_RESULT_REFERENCE_DETAIL.REQUEST",
+                code="RUN_RESULT_REFERENCE_DETAIL.METHOD_NOT_ALLOWED",
+                message="GET method is required.",
+            )
+            return self._error_response([issue], status_code=405)
+
+        detail = self.usecase.get_detail(run_id)
+        if detail is None:
+            issue = Issue.error(
+                phase="RUN_RESULT_REFERENCE_DETAIL.GET",
+                code="RUN_RESULT_REFERENCE_DETAIL.NOT_FOUND",
+                message="Run result was not found.",
+                context={"run_id": run_id},
+            )
+            return self._error_response([issue], status_code=404)
+
+        return ApiResponse(
+            body={
+                "success": True,
+                **to_run_result_reference_detail(detail),
+                "issuesForError": [],
+            },
+            status_code=200,
+        )
+
+    def _error_response(self, issues: List[Issue], status_code: int) -> ApiResponse:
+        return ApiResponse(
+            body={
+                "success": False,
+                "runResult": None,
+                "issues": [],
+                "issuesForError": [to_issue_dto(issue) for issue in issues],
             },
             status_code=status_code,
         )

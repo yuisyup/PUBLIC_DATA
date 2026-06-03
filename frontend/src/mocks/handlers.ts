@@ -65,6 +65,69 @@ const runResultReferences = [
   },
 ];
 
+const runResultDetails = {
+  "11111111-1111-1111-1111-111111111111": {
+    success: true,
+    runResult: {
+      runId: "11111111-1111-1111-1111-111111111111",
+      mode: "SCREEN",
+      source: "CSV",
+      inputDefId: "1",
+      csvDefId: null,
+      targetModel: "Customer",
+      executedBy: "mock-user",
+      invokedBy: null,
+      inputName: "customers.csv",
+      inputFingerprint: "mock-fingerprint",
+      tagsJson: { feature_key: "bulk_register" },
+      startedAt: "2026-06-01T10:00:00+09:00",
+      finishedAt: "2026-06-01T10:00:02+09:00",
+      durationMs: 2000,
+      status: "SUCCESS_WITH_WARN",
+      totalRows: 2,
+      parsedRows: 2,
+      fkResolvedRows: 2,
+      processedRows: 2,
+      insertedRows: 1,
+      updatedRows: 1,
+      skippedRows: 0,
+      errorRows: 0,
+      infoCount: 1,
+      warnCount: 1,
+      errorCount: 0,
+      summaryMessage: "mock summary",
+      exceptionType: null,
+      exceptionMessage: null,
+      createdAt: "2026-06-01T10:00:03+09:00",
+    },
+    issues: [
+      {
+        id: "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+        runId: "11111111-1111-1111-1111-111111111111",
+        domain: "REGISTER",
+        phase: "REGISTER.VALIDATE",
+        severity: "WARN",
+        code: "REGISTER.CSV_WARNING",
+        rowIndex: 2,
+        message: "mock warning",
+        skipScope: "ROW",
+        createdAt: "2026-06-01T10:00:01+09:00",
+        contexts: [
+          {
+            id: "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb",
+            issueId: "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+            key: "column",
+            valueText: "name",
+            valueJson: { expected: "not blank" },
+            createdAt: "2026-06-01T10:00:01+09:00",
+          },
+        ],
+      },
+    ],
+    issuesForError: [],
+  },
+};
+
 export const handlers = [
   http.get("/api/user", () => {
     return HttpResponse.json({ id: 1, name: "Taro Yamada" });
@@ -153,5 +216,34 @@ export const handlers = [
       results,
       issues: [],
     });
+  }),
+
+  http.get(`${mockApiPath(API_PATHS.runResultReference.detail)}:runId/`, ({ params }) => {
+    const runId = String(params.runId);
+    const detail = runResultDetails[runId as keyof typeof runResultDetails];
+
+    if (!detail) {
+      return HttpResponse.json(
+        {
+          success: false,
+          runResult: null,
+          issues: [],
+          issuesForError: [
+            {
+              severity: "ERROR",
+              phase: "RUN_RESULT_REFERENCE_DETAIL.GET",
+              code: "RUN_RESULT_REFERENCE_DETAIL.NOT_FOUND",
+              row: null,
+              message: "Run result was not found.",
+              skip: "ALL",
+              context: { run_id: runId },
+            },
+          ],
+        },
+        { status: 404 },
+      );
+    }
+
+    return HttpResponse.json(detail);
   }),
 ];

@@ -8,6 +8,7 @@ from common.views.api.input_definition import (
 from common.views.api.register.bulk_register_api import bulk_register
 from common.views.api.run_result_reference.run_result_reference_api import (
     run_result_reference,
+    run_result_reference_detail,
 )
 
 app_name = "common_api"
@@ -21,5 +22,10 @@ urlpatterns = [
         "run-result-reference/",
         run_result_reference,
         name="run_result_reference",
+    ),
+    path(
+        "run-result-reference/detail/<uuid:run_id>/",
+        run_result_reference_detail,
+        name="run_result_reference_detail",
     ),
 ]

@@ -1,4 +1,5 @@
 import { Alert, Button, Card, Table } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import type { RunResultReferenceResponse } from "../types/runResultReferenceTypes";
 
 type Props = {
@@ -6,6 +7,8 @@ type Props = {
 };
 
 export function RunResultReferenceResult({ result }: Props) {
+  const navigate = useNavigate();
+
   if (!result.success) {
     return (
       <Card className="mt-4">
@@ -66,7 +69,14 @@ export function RunResultReferenceResult({ result }: Props) {
                   <td>{row.targetModel ?? "-"}</td>
                   <td>{formatCreatedAt(row.createdAt)}</td>
                   <td>
-                    <Button type="button" variant="outline-primary" size="sm" disabled>
+                    <Button
+                      type="button"
+                      variant="outline-primary"
+                      size="sm"
+                      onClick={() =>
+                        navigate(`/run-result-reference/detail/${row.runId}`)
+                      }
+                    >
                       詳細
                     </Button>
                   </td>
